@@ -16,6 +16,16 @@ class Wishlist(models.Model):
         return self.title
 
 
+class LoginHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(blank=True, null=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    logged_in_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.email or self.user.username} @ {self.logged_in_at:%Y-%m-%d %H:%M}"
+
+
 class SearchHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

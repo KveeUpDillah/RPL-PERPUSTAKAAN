@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<section class="auth-section">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-title">Login</h1>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="id_username">Username</label>
+                <input class="form-input" id="id_username" type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="id_password">Password</label>
+                <input class="form-input" id="id_password" type="password" name="password" placeholder="Password" required>
+            </div>
+            <button class="btn btn-primary btn--full" type="submit">Login</button>
+        </form>
+        <div class="auth-switch">
+            Belum punya akun? <a href="/register/">Register</a>
+        </div>
+    </div>
+</section>
+</section>
+
+{% endblock %}

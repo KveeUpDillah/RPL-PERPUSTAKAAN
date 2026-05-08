@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact & Feedback — BookAI{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <h1 class="page-hero-title">Contact & Feedback</h1>
+    <p class="page-hero-sub">Ada saran atau pertanyaan? Kami senang mendengarnya.</p>
+  </div>
+</section>
+
+<section class="section section--narrow">
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert alert--success">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="contact-card">
+    <form method="POST" action="{% url 'contact' %}">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label">Nama</label>
+        <input type="text" name="name" class="form-input" placeholder="Nama kamu" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-input" placeholder="email@contoh.com" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Pesan</label>
+        <textarea name="message" class="form-input form-textarea" placeholder="Tulis pesan atau feedback kamu..." rows="5" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn--full">Kirim Pesan</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

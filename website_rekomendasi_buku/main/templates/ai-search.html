@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Search — BookAI{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <h1 class="page-hero-title">AI Search</h1>
+    <p class="page-hero-sub">Cari buku apapun dari jutaan judul di Open Library.</p>
+
+    <div class="search-bar-wrap">
+      <span class="search-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input
+        id="aiSearchInput"
+        type="text"
+        placeholder="Cari judul, penulis, atau topik..."
+        autocomplete="off"
+      />
+      <button id="aiSearchBtn" class="btn btn-primary" onclick="doAiSearch()">Cari</button>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div id="aiSearchStats" class="search-stats" hidden></div>
+  <div id="aiSearchLoader" class="loader-wrap" hidden><div class="loader"></div></div>
+  <div id="aiSearchResults" class="books-grid"></div>
+  <div id="aiSearchEmpty" class="empty-state" hidden>
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <p>Tidak ada hasil. Coba kata kunci yang berbeda.</p>
+  </div>
+
+  <div id="aiPagination" class="pagination" hidden>
+    <button id="prevBtn" class="btn btn-outline" onclick="changePage(-1)">&#8592; Sebelumnya</button>
+    <span id="pageInfo" class="page-info"></span>
+    <button id="nextBtn" class="btn btn-outline" onclick="changePage(1)">Selanjutnya &#8594;</button>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentPage  = 1;
+let currentQuery = '';
+let totalResults = 0;
+const LIMIT = 20;
+
+const input   = document.getElementById('aiSearchInput');
+const results = document.getElementById('aiSearchResults');
+const loader  = document.getElementById('aiSearchLoader');
+const empty   = document.getElementById('aiSearchEmpty');
+const stats   = document.getElementById('aiSearchStats');
+const pagination = document.getElementById('aiPagination');
+
+input.addEventListener('keydown', e => { if (e.key === 'Enter') doAiSearch(); });
+
+async function doAiSearch(page = 1) {
+  const q = input.value.trim();
+  if (!q) return;
+
+  currentQuery = q;
+  currentPage  = page;
+
+  loader.hidden  = false;
+  empty.hidden   = true;
+  stats.hidden   = true;
+  pagination.hidden = true;
+  results.innerHTML = '';
+
+  const data = await apiFetch(`/api/search/?q=${encodeURIComponent(q)}&page=${page}`);
+  loader.hidden = true;
+
+  if (!data || !data.books.length) {
+    empty.hidden = false;
+    return;
+  }
+
+  totalResults = data.total;
+  stats.textContent = `Ditemukan ${totalResults.toLocaleString('id')} hasil untuk "${q}"`;
+  stats.hidden = false;
+
+  renderBooks(results, data.books);
+
+  // Pagination
+  const totalPages = Math.ceil(totalResults / LIMIT);
+  if (totalPages > 1) {
+    document.getElementById('pageInfo').textContent = `Halaman ${page} dari ${totalPages}`;
+    document.getElementById('prevBtn').disabled = page <= 1;
+    document.getElementById('nextBtn').disabled = page >= totalPages;
+    pagination.hidden = false;
+  }
+}
+
+function changePage(dir) {
+  const totalPages = Math.ceil(totalResults / LIMIT);
+  const next = currentPage + dir;
+  if (next < 1 || next > totalPages) return;
+  doAiSearch(next);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+{% endblock %}
