@@ -4,62 +4,160 @@
 {% block title %}Favorit Saya — BookAI{% endblock %}
 
 {% block content %}
+
 <section class="page-hero">
+
   <div class="page-hero-inner">
-    <h1 class="page-hero-title">Favorit Saya</h1>
-    <p class="page-hero-sub">Koleksi buku yang telah kamu simpan.</p>
+
+    <h1 class="page-hero-title">
+      Favorit Saya
+    </h1>
+
+    <p class="page-hero-sub">
+      Koleksi buku yang telah kamu simpan.
+    </p>
+
   </div>
+
 </section>
 
+
 <section class="section">
+
   {% if favorites %}
+
     <p class="section-sub" style="margin-bottom:1.5rem;">
+
       {{ favorites|length }} buku tersimpan
+
     </p>
+
+
     <div class="books-grid">
+
       {% for book in favorites %}
-      <div class="book-card" onclick="openBookModal({
-        key: '{{ book.book_key|escapejs }}',
-        title: '{{ book.title|escapejs }}',
-        author: '{{ book.author|escapejs }}',
-        year: '{{ book.year|escapejs }}',
-        cover_id: '{{ book.cover_id|escapejs }}',
-        cover_url: '{{ book.cover_url|default:''|escapejs }}',
-        language: '{{ book.language|escapejs }}',
-        description: '{{ book.description|escapejs }}',
-        is_favorite: true
-      })">
+
+      <div
+        class="book-card"
+
+        onclick='openBookModal({
+
+          key: "{{ book.key|escapejs }}",
+
+          title: "{{ book.title|escapejs }}",
+
+          author: "{{ book.author|escapejs }}",
+
+          year: "{{ book.year|escapejs }}",
+
+          cover_url: "{{ book.cover_url|default:""|escapejs }}",
+
+          language: "{{ book.language|escapejs }}",
+
+          description: "{{ book.description|escapejs }}",
+
+          is_favorite: true
+
+        })'
+      >
+
         <div class="book-cover">
+
           {% if book.cover_url %}
-            <img src="{{ book.cover_url }}" alt="{{ book.title }}" loading="lazy" />
+
+            <img
+              src="{{ book.cover_url }}"
+              alt="{{ book.title }}"
+              loading="lazy"
+            />
+
           {% else %}
+
             <div class="cover-fallback">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+
                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+
               </svg>
+
             </div>
+
           {% endif %}
+
           <div class="book-cover-overlay">
-            <span class="book-title-overlay">{{ book.title }}</span>
-            <span class="book-author-overlay">{{ book.author }}</span>
+
+            <span class="book-title-overlay">
+              {{ book.title }}
+            </span>
+
+            <span class="book-author-overlay">
+              {{ book.author }}
+            </span>
+
           </div>
+
         </div>
+
+
         <div class="book-info">
-          <p class="book-title">{{ book.title }}</p>
-          <p class="book-author">{{ book.author }}</p>
+
+          <p class="book-title">
+            {{ book.title }}
+          </p>
+
+          <p class="book-author">
+            {{ book.author }}
+          </p>
+
         </div>
+
       </div>
+
       {% endfor %}
+
     </div>
+
   {% else %}
+
     <div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+
+      <svg
+        width="48"
+        height="48"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+
       </svg>
-      <p>Belum ada buku favorit.</p>
-      <a href="{% url 'ai_search' %}" class="btn btn-primary" style="margin-top:1rem;">Cari Buku Sekarang</a>
+
+      <p>
+        Belum ada buku favorit.
+      </p>
+
+      <a
+        href="{% url 'ai_search' %}"
+        class="btn btn-primary"
+        style="margin-top:1rem;"
+      >
+        Cari Buku Sekarang
+      </a>
+
     </div>
+
   {% endif %}
+
 </section>
+
 {% endblock %}

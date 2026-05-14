@@ -9,14 +9,30 @@ function getCsrf() {
 
 // ── Fetch wrapper ───────────────────────────────────────────────
 async function apiFetch(url, opts = {}) {
+
   try {
+
     const res = await fetch(url, {
-      headers: { 'X-CSRFToken': getCsrf(), 'Content-Type': 'application/json', ...opts.headers },
+
+      credentials: 'same-origin',
+
+      headers: {
+        'X-CSRFToken': getCsrf(),
+        'Content-Type': 'application/json',
+        ...opts.headers
+      },
+
       ...opts,
     });
+
     if (!res.ok) return null;
+
     return await res.json();
-  } catch { return null; }
+
+  } catch {
+
+    return null;
+  }
 }
 
 // ── Modal state ─────────────────────────────────────────────────
@@ -26,23 +42,30 @@ function openBookModal(book) {
   _currentBook = book;
   const el = id => document.getElementById(id);
 
-  el('modalTitle').textContent    = book.title  || '';
-  el('modalAuthor').textContent   = book.author || '—';
-  el('modalYear').textContent     = book.year   || '—';
+  el('modalTitle').textContent = book.title || '';
+  el('modalAuthor').textContent = book.author || '—';
+  el('modalYear').textContent = book.year || '—';
   el('modalLanguage').textContent = capitalise(book.language) || '—';
   el('modalDescription').textContent = book.description || 'Tidak ada deskripsi tersedia.';
 
-  const img      = el('modalCoverImg');
-  const fallback = el('modalCoverFallback');
-  if (book.cover_url) {
-    img.src = book.cover_url;
-    img.hidden = false;
-    fallback.hidden = true;
-    img.onerror = () => { img.hidden = true; fallback.hidden = false; };
-  } else {
-    img.hidden = true;
-    fallback.hidden = false;
-  }
+const img = el('modalCoverImg');
+
+const fallback = el('modalCoverFallback');
+
+if (book.cover_url) {
+
+  img.src = book.cover_url;
+
+  img.style.display = 'block';
+
+  fallback.style.display = 'none';
+
+} else {
+
+  img.style.display = 'none';
+
+  fallback.style.display = 'flex';
+}
 
   updateFavBtn(book.is_favorite);
   document.getElementById('bookModal').hidden = false;
@@ -66,7 +89,7 @@ function closeLoginModal() {
 
 // Close modals on overlay click
 document.addEventListener('click', e => {
-  if (e.target.id === 'bookModal')          closeBookModal();
+  if (e.target.id === 'bookModal') closeBookModal();
   if (e.target.id === 'loginRequiredModal') closeLoginModal();
 });
 document.addEventListener('keydown', e => {
@@ -75,7 +98,7 @@ document.addEventListener('keydown', e => {
 
 // ── Favourite toggle ────────────────────────────────────────────
 function updateFavBtn(isFav) {
-  const btn  = document.getElementById('modalFavBtn');
+  const btn = document.getElementById('modalFavBtn');
   const text = document.getElementById('modalFavText');
   if (!btn) return;
   btn.classList.toggle('active', isFav);
@@ -114,7 +137,7 @@ function renderBooks(container, books, showRank = false) {
   books.forEach((book, i) => {
     const card = document.createElement('div');
     card.className = 'book-card';
-    card.dataset.bookKey    = book.key;
+    card.dataset.bookKey = book.key;
     card.dataset.isFavorite = book.is_favorite ? '1' : '0';
     card.onclick = () => openBookModal(book);
 
@@ -151,7 +174,7 @@ function renderBooks(container, books, showRank = false) {
 // ── Utils ───────────────────────────────────────────────────────
 function esc(str) {
   return String(str || '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 }
 
