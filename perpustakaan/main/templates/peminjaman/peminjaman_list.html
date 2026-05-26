@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Data Peminjaman</h1>
+<a href="{% url 'peminjaman_tambah' %}">Tambah Peminjaman</a>
+
+<table>
+    <tr>
+        <th>Anggota</th>
+        <th>Buku</th>
+        <th>Tanggal Pinjam</th>
+        <th>Tanggal Kembali</th>
+        <th>Status</th>
+    </tr>
+
+    {% for p in peminjaman %}
+    <tr>
+        <td>{{ p.anggota.nama }}</td>
+        <td>{{ p.buku.judul }}</td>
+        <td>{{ p.tanggal_pinjam }}</td>
+        <td>{{ p.tanggal_kembali }}</td>
+        <td>{{ p.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Data Anggota</h1>
+<a href="{% url 'anggota_tambah' %}">Tambah Anggota</a>
+
+<table>
+    <tr>
+        <th>Nama</th>
+        <th>NIM</th>
+        <th>Email</th>
+        <th>No HP</th>
+    </tr>
+
+    {% for a in anggota %}
+    <tr>
+        <td>{{ a.nama }}</td>
+        <td>{{ a.nim }}</td>
+        <td>{{ a.email }}</td>
+        <td>{{ a.no_hp }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

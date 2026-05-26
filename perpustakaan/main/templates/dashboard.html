@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Dashboard Perpustakaan</h1>
+
+<div class="cards">
+    <div class="card">Total Buku: {{ total_buku }}</div>
+    <div class="card">Total Anggota: {{ total_anggota }}</div>
+    <div class="card">Total Peminjaman: {{ total_peminjaman }}</div>
+    <div class="card">Sedang Dipinjam: {{ total_dipinjam }}</div>
+</div>
+{% endblock %}
