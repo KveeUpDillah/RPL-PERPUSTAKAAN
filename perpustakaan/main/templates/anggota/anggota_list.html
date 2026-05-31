@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Data Anggota</h1>
+
+<table>
+    <tr>
+        <th>User</th>
+        <th>Nama</th>
+        <th>NIM</th>
+        <th>Email</th>
+        <th>No HP</th>
+        <th>Sanksi Sampai</th>
+        <th>Aksi</th>
+    </tr>
+
+    {% for a in anggota %}
+    <tr>
+        <td>
+            {% if a.user %}
+                {{ a.user.username }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+        <td>{{ a.nama }}</td>
+        <td>{{ a.nim }}</td>
+        <td>{{ a.email }}</td>
+        <td>{{ a.no_hp }}</td>
+        <td>
+            {% if a.sanksi_sampai %}
+                {{ a.sanksi_sampai }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'anggota_edit' a.id %}" class="btn-custom">
+                Edit
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

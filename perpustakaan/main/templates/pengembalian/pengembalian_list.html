@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Data Pengembalian</h1>
+<table>
+    <tr>
+        <th>Peminjaman</th>
+        <th>Anggota</th>
+        <th>Buku</th>
+        <th>Tanggal Dikembalikan</th>
+        <th>Denda</th>
+    </tr>
+
+    {% for p in pengembalian %}
+    <tr>
+        <td>{{ p.peminjaman }}</td>
+        <td>{{ p.peminjaman.anggota.nama }}</td>
+        <td>{{ p.peminjaman.buku.judul }}</td>
+        <td>{{ p.tanggal_dikembalikan }}</td>
+        <td>{{ p.denda }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

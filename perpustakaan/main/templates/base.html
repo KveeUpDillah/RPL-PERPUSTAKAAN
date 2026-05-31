@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpustakaan</title>
+
+    {% load static %}
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Custom -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container">
+
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold" href="{% if user.is_authenticated and user.is_staff %}{% url 'dashboard' %}{% else %}{% url 'buku_list' %}{% endif %}">
+            📚 Pustaka BuKu
+        </a>
+
+        <!-- Tombol Mobile -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav me-auto">
+
+                {% if user.is_authenticated and user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                           href="{% url 'dashboard' %}">
+                            Dashboard
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'buku_list' %}active{% endif %}"
+                       href="{% url 'buku_list' %}">
+                        Buku
+                    </a>
+                </li>
+
+                {% if user.is_authenticated and user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'anggota_list' %}active{% endif %}"
+                           href="{% url 'anggota_list' %}">
+                            Anggota
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'peminjaman_list' %}active{% endif %}"
+                       href="{% url 'peminjaman_list' %}">
+                        Peminjaman
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'pengembalian_list' %}active{% endif %}"
+                       href="{% url 'pengembalian_list' %}">
+                        Pengembalian
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="d-flex align-items-center">
+
+                {% if user.is_authenticated %}
+
+                    <span class="text-white me-3">
+                        hallo, {{ user.username }}
+                    </span>
+
+                    <a href="{% url 'logout' %}"
+                    class="btn btn-outline-light">
+                        Logout
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}"
+                    class="btn btn-outline-light">
+                        Login
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+<!-- Content -->
+<div class="container py-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

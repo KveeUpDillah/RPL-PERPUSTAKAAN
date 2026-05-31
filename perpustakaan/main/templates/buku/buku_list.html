@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Data Buku</h1>
+{% if request.user.is_staff %}
+<a href="{% url 'buku_tambah' %}" class="btn-custom">
+    Tambah Buku
+</a>
+{% endif %}
+
+{% if sanksi_sampai %}
+<div class="alert alert-warning mt-3">
+    Akun kamu belum bisa meminjam buku sampai {{ sanksi_sampai }} karena telat mengembalikan buku.
+</div>
+{% endif %}
+
+<table>
+    <tr>
+        <th>Judul</th>
+        <th>Penulis</th>
+        <th>Kategori</th>
+        <th>Stok</th>
+        <th>Aksi</th>
+    </tr>
+
+    {% for b in buku %}
+    <tr>
+        <td>{{ b.judul }}</td>
+        <td>{{ b.penulis }}</td>
+        <td>{{ b.kategori }}</td>
+        <td>{{ b.stok }}</td>
+        <td>
+            {% if request.user.is_staff %}
+                <a href="{% url 'buku_edit' b.id %}" class="btn-custom">
+                    Edit
+                </a>
+
+                <a href="{% url 'buku_hapus' b.id %}" class="btn-custom">
+                    Hapus
+                </a>
+            {% else %}
+                {% if sanksi_sampai %}
+                    <span class="text-muted">Tidak bisa pinjam</span>
+                {% elif b.stok > 0 %}
+                    <form method="post" action="{% url 'buku_pinjam' b.id %}" class="pinjam-form">
+                        {% csrf_token %}
+                        <input
+                            type="date"
+                            name="tanggal_kembali"
+                            min="{{ today|date:'Y-m-d' }}"
+                            max="{{ max_return_date|date:'Y-m-d' }}"
+                            value="{{ max_return_date|date:'Y-m-d' }}"
+                            required>
+                        <button type="submit" class="btn-custom">
+                            Pinjam
+                        </button>
+                    </form>
+                {% else %}
+                    <span class="text-muted">Stok habis</span>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

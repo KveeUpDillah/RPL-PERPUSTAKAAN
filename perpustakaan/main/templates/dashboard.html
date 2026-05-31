@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/css/dashboard.css' %}">
+
+<h1>Dashboard Perpustakaan</h1>
+
+<div class="cards">
+    <div class="card">Total Buku: {{ total_buku }}</div>
+    <div class="card">Total Anggota: {{ total_anggota }}</div>
+    <div class="card">Total Peminjaman: {{ total_peminjaman }}</div>
+    <div class="card">Sedang Dipinjam: {{ total_dipinjam }}</div>
+</div>
+
+<hr>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <h3>Diagram Batang</h3>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>Diagram Lingkaran</h3>
+        <canvas id="pieChart"></canvas>
+    </div>
+</div>
+
+<script>
+    const totalBuku = {{ total_buku|default:0 }};
+    const totalAnggota = {{ total_anggota|default:0 }};
+    const totalPeminjaman = {{ total_peminjaman|default:0 }};
+    const totalDipinjam = {{ total_dipinjam|default:0 }};
+</script>
+
+<div class="history-card mt-4">
+    <h4>Histori Aktivitas Terbaru</h4>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>User</th>
+                    <th>Aksi</th>
+                    <th>Data</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aktivitas in aktivitas_terbaru %}
+                <tr>
+                    <td>{{ aktivitas.waktu|date:"d M Y H:i" }}</td>
+                    <td>{{ aktivitas.user.username }}</td>
+                    <td>{{ aktivitas.aksi }}</td>
+                    <td>{{ aktivitas.model }}</td>
+                    <td>{{ aktivitas.keterangan }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Belum ada aktivitas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'main/js/dashboard.js' %}"></script>
+{% endblock %}

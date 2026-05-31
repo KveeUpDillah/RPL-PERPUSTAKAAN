@@ -1,0 +1,55 @@
+.cards {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    min-width: 230px;
+}
+
+.chart-container {
+    display: flex;
+    gap: 25px;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.chart-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    width: 520px;
+    height: 420px;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+.history-card {
+    width: 100%;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    margin-top: 25px;
+}
+
+.history-card h4 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.history-card table {
+    width: 100%;
+    margin-bottom: 0;
+}

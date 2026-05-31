@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Data Peminjaman</h1>
+
+<table>
+    <tr>
+        <th>Anggota</th>
+        <th>Buku</th>
+        <th>Tanggal Pinjam</th>
+        <th>Tanggal Kembali</th>
+        <th>Status</th>
+        {% if request.user.is_staff %}
+        <th>Aksi</th>
+        {% endif %}
+    </tr>
+
+    {% for p in peminjaman %}
+    <tr>
+        <td>{{ p.anggota.nama }}</td>
+        <td>{{ p.buku.judul }}</td>
+        <td>{{ p.tanggal_pinjam }}</td>
+        <td>{{ p.tanggal_kembali }}</td>
+        <td>{{ p.status }}</td>
+        {% if request.user.is_staff %}
+        <td>
+            {% if p.status != 'dikembalikan' %}
+                <form method="post" action="{% url 'peminjaman_kembalikan' p.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-custom">
+                        Kembalikan
+                    </button>
+                </form>
+            {% else %}
+                <span class="text-muted">Sudah dikembalikan</span>
+            {% endif %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
