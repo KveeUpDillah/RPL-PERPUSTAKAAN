@@ -1,4 +1,4 @@
-# [INF2183] Praktikum Rekayasa Perangkat Lunak
+# [INF2183] Rekayasa Perangkat Lunak
 ## Proyek UAS Sistem Informasi Perpustakaan (Pustaka BuKu)
 
 ### Deskripsi Proyek
