@@ -38,8 +38,17 @@
             <a href="{% url 'anggota_edit' a.id %}" class="btn-custom">
                 Edit
             </a>
+
+            <a href="{% url 'hapus_anggota' a.id %}"
+            class="btn-custom"
+            onclick="return confirm('Yakin ingin menghapus anggota ini?')">
+                Hapus
+            </a>
         </td>
     </tr>
     {% endfor %}
 </table>
 {% endblock %}
+
+
+

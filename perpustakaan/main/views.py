@@ -247,6 +247,27 @@ def anggota_edit(request, id):
 
     return render(request, 'anggota/anggota_form.html', {'form': form})
 
+
+@admin_required
+def hapus_anggota(request, id):
+    anggota = get_object_or_404(Anggota, id=id)
+
+    nama_anggota = anggota.nama
+
+    if anggota.user:
+        anggota.user.delete()
+    else:
+        anggota.delete()
+
+    Aktivitas.objects.create(
+        user=request.user,
+        aksi='Hapus',
+        model='Anggota',
+        keterangan=f"Menghapus anggota: {nama_anggota}"
+    )
+
+    return redirect('anggota_list')
+
 @login_required
 def peminjaman_list(request):
     peminjaman = Peminjaman.objects.select_related('anggota', 'buku').all()
