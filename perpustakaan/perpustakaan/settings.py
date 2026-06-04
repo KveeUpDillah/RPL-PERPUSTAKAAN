@@ -55,7 +55,7 @@ WSGI_APPLICATION = 'perpustakaan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_perpustakaanK',
+        'NAME': 'db_perpustakaan',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -84,6 +84,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 
-LOGIN_REDIRECT_URL = 'buku_list'
+LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'login'
