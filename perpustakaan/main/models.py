@@ -11,7 +11,6 @@ class Anggota(models.Model):
     email = models.EmailField()
     no_hp = models.CharField(max_length=20)
     alamat = models.TextField(blank=True)
-    sanksi_sampai = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.nama

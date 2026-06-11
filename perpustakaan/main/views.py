@@ -50,20 +50,11 @@ def dashboard(request):
 def buku_list(request):
     buku = Buku.objects.all()
     today = timezone.localdate()
-    anggota = None
-    sanksi_sampai = None
-
-    if request.user.is_authenticated and not request.user.is_staff:
-        anggota = Anggota.objects.filter(user=request.user).first()
-
-        if anggota and anggota.sanksi_sampai and anggota.sanksi_sampai > today:
-            sanksi_sampai = anggota.sanksi_sampai
 
     return render(request, 'buku/buku_list.html', {
-        'buku': buku,
-        'today': today,
-        'max_return_date': today + timedelta(days=7),
-        'sanksi_sampai': sanksi_sampai,
+    'buku': buku,
+    'today': today,
+    'max_return_date': today + timedelta(days=7),
     })
 
 
@@ -87,23 +78,16 @@ def buku_pinjam(request, id):
 
     tanggal_pinjam = timezone.localdate()
 
-    if anggota.sanksi_sampai and anggota.sanksi_sampai > tanggal_pinjam:
-        messages.error(
-            request,
-            f"Akun kamu belum bisa meminjam buku sampai {anggota.sanksi_sampai} karena telat mengembalikan buku."
-        )
-        return redirect('buku_list')
-
     tanggal_kembali = parse_date(request.POST.get('tanggal_kembali', ''))
     max_tanggal_kembali = tanggal_pinjam + timedelta(days=7)
 
     if not tanggal_kembali:
         messages.error(request, 'Pilih tanggal pengembalian terlebih dahulu.')
         return redirect('buku_list')
-
-    if tanggal_kembali < tanggal_pinjam:
-        messages.error(request, 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.')
-        return redirect('buku_list')
+    
+    #if tanggal_kembali < tanggal_pinjam:
+       # messages.error(request, 'Tanggal pengembalian tidak boleh sebelum tanggal pinjam.')
+        #return redirect('buku_list')
 
     if tanggal_kembali > max_tanggal_kembali:
         messages.error(request, 'Tanggal pengembalian maksimal 7 hari dari tanggal pinjam.')
@@ -315,12 +299,6 @@ def peminjaman_kembalikan(request, id):
             messages.warning(request, 'Peminjaman ini sudah tercatat sebagai pengembalian.')
             return redirect('pengembalian_list')
 
-        pengembalian = Pengembalian.objects.create(
-            peminjaman=peminjaman,
-            tanggal_dikembalikan=timezone.localdate(),
-            denda=0,
-        )
-
         peminjaman.status = 'dikembalikan'
         peminjaman.save(update_fields=['status'])
 
@@ -328,17 +306,18 @@ def peminjaman_kembalikan(request, id):
         buku.stok += 1
         buku.save(update_fields=['stok'])
 
-        hari_telat = max((pengembalian.tanggal_dikembalikan - peminjaman.tanggal_kembali).days, 0)
+        hari_telat = max(
+            (timezone.localdate() - peminjaman.tanggal_kembali).days,
+            0
+        )
 
-        if hari_telat > 0:
-            anggota = peminjaman.anggota
-            mulai_sanksi = anggota.sanksi_sampai or pengembalian.tanggal_dikembalikan
+        denda = hari_telat * 1000  # Rp1000 per hari
 
-            if mulai_sanksi < pengembalian.tanggal_dikembalikan:
-                mulai_sanksi = pengembalian.tanggal_dikembalikan
-
-            anggota.sanksi_sampai = mulai_sanksi + timedelta(days=hari_telat)
-            anggota.save(update_fields=['sanksi_sampai'])
+        pengembalian = Pengembalian.objects.create(
+            peminjaman=peminjaman,
+            tanggal_dikembalikan=timezone.localdate(),
+            denda=denda,
+        )
 
         Aktivitas.objects.create(
             user=request.user,
@@ -351,7 +330,7 @@ def peminjaman_kembalikan(request, id):
         messages.warning(
             request,
             f"Buku {pengembalian.peminjaman.buku.judul} dikembalikan terlambat {hari_telat} hari. "
-            f"Akun anggota tidak bisa meminjam sampai {peminjaman.anggota.sanksi_sampai}."
+            f"Denda yang harus dibayar sebesar Rp{denda:,}."
         )
     else:
         messages.success(

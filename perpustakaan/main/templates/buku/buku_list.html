@@ -8,12 +8,6 @@
 </a>
 {% endif %}
 
-{% if sanksi_sampai %}
-<div class="alert alert-warning mt-3">
-    Akun kamu belum bisa meminjam buku sampai {{ sanksi_sampai }} karena telat mengembalikan buku.
-</div>
-{% endif %}
-
 <table>
     <tr>
         <th>Judul</th>
@@ -39,9 +33,7 @@
                     Hapus
                 </a>
             {% else %}
-                {% if sanksi_sampai %}
-                    <span class="text-muted">Tidak bisa pinjam</span>
-                {% elif b.stok > 0 %}
+                {% if b.stok > 0 %}
                     <form method="post" action="{% url 'buku_pinjam' b.id %}" class="pinjam-form">
                         {% csrf_token %}
                         <input

@@ -4,7 +4,7 @@ from .models import Anggota, Buku, Peminjaman, Pengembalian
 
 @admin.register(Anggota)
 class AnggotaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'nama', 'nim', 'email', 'no_hp', 'sanksi_sampai')
+    list_display = ('id', 'user', 'nama', 'nim', 'email', 'no_hp')
     search_fields = ('user__username', 'nama', 'nim', 'email')
 
 

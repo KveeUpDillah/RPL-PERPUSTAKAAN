@@ -10,7 +10,6 @@
         <th>NIM</th>
         <th>Email</th>
         <th>No HP</th>
-        <th>Sanksi Sampai</th>
         <th>Aksi</th>
     </tr>
 
@@ -27,13 +26,7 @@
         <td>{{ a.nim }}</td>
         <td>{{ a.email }}</td>
         <td>{{ a.no_hp }}</td>
-        <td>
-            {% if a.sanksi_sampai %}
-                {{ a.sanksi_sampai }}
-            {% else %}
-                -
-            {% endif %}
-        </td>
+ 
         <td>
             <a href="{% url 'anggota_edit' a.id %}" class="btn-custom">
                 Edit
